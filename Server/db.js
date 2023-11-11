@@ -8,7 +8,7 @@ export const connectToMongo = async()=>{
     await mongoose
         .connect(mongoUrl)
         .then(()=>{
-            console.log("Data base connect sucessfully .")
+            console.log("Data base connect sucessfully.")
         })
         .catch((error)=>{
             console.log(error.message)

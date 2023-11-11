@@ -1,6 +1,7 @@
 import { connectToMongo } from "./db.js";
 import express from 'express'
-import cors from 'cors'
+import cors from 'cors';
+import userRoutes from './routes/users.js'
 
 connectToMongo();
 
@@ -17,6 +18,8 @@ app.use(cors({
 app.get('/', (req, res) => {
     res.send('Hello World!')
   })
+
+app.use('/api',userRoutes)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
