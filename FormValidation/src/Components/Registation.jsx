@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Registration = () => {
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [userData, setUserData] = useState({
     name: "",
-    dob: "",
+    dob:new Date,
     gender: "",
     hobbies: [],
     state: "",
@@ -35,8 +36,7 @@ const Registration = () => {
           file: selectedFile,
         }));
       } else {
-        console.error("Invalid file type!");
-        toast.error("Invalid file type!");
+        toast.error("Invalid file type! please select .docx file");
         fileInput.value = "";
       }
     }
@@ -73,24 +73,89 @@ const Registration = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'dob') {
+      const dateValue = new Date(value);
+      const formattedDate = dateValue.toISOString().split('T')[0]; // Format to "yyyy-MM-dd"
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        [name]: formattedDate,
+      }));
+  } else {
     setUserData((prevUserData) => ({
       ...prevUserData,
       [name]: value,
     }));
+  }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Custom validation: At least two hobbies must be selected
     if (selectedHobbies.length < 2) {
       toast.error("Please select at least two hobbies!");
       return;
-    }
+    } else {
+      const formData = new FormData();
+  
+      // Append user data to FormData
+      formData.append("name", userData.name);
+      formData.append("dob", userData.dob);
+      formData.append("gender", userData.gender);
+      formData.append("hobbies",userData.hobbies);
+      formData.append("state", userData.state);
+      formData.append("address", userData.address);
+  
+      // Append the file to FormData
+      formData.append("file", userData.file);
+      console.log(userData.file)
+      // try {
+      //   const response = await fetch("/api/addUser", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       name: userData.name,
+      //       dob:userData.dob,
+      //       gender:userData.gender,
+      //       hobbies:userData.hobbies,
+      //       state:userData.state,
+      //       file:userData.file,
+      //       address:userData.address
+      //     }),
+      //   });
+  
+      //   const json = await response.json();
+      //   console.log(json);
+  
+      //   if (json.status === true) {
+      //     // Save the auth token and redirect
+      //     toast.success("Account created successfully");
+      //   } else {
+      //     toast.error("User already exists.");
+      //   }
+      // } catch (error) {
+      //   console.error(error);
+      //   toast.error("Error submitting the form.");
+      // }
 
-    // Continue with the form submission logic
-    console.log("Form submitted!", userData);
+      axios.post('/api/addUser', formData)
+      .then((res) => {
+          console.log(res, "res")
+          if (res.data.code == 200) {
+           console.log(formData)
+          }
+      })
+      .catch((err) => {
+          console.log(err, "err")
+      })
+      console.log(formData);
+      console.log(userData)
+    }
   };
+  
+  
 
   return (
     <div className="flex flex-col md:flex-row m-4 border rounded-lg bg-white">

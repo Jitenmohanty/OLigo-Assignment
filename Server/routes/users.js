@@ -1,8 +1,8 @@
 import express from 'express';
-import { addUsers } from '../Controller/UserData.js';
+import { addUsers, addUsersWithFile } from '../Controller/UserData.js';
 
 const router = express.Router();
 
-router.post('/addUser',addUsers);
+router.post('/addUser',addUsersWithFile);
 
 export default router;

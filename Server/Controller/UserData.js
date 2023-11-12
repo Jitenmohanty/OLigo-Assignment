@@ -2,7 +2,16 @@ import userData from "../Model/User.js";
 import multer from "multer";
 
 // Multer setup
-const storage = multer.memoryStorage();
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
+
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now());
+  },
+});
+
 const upload = multer({ storage: storage });
 
 export const getAllUsers = async (req, res, next) => {
@@ -20,24 +29,20 @@ export const getAllUsers = async (req, res, next) => {
 export const addUsers = async (req, res, next) => {
   try {
     const { name, dob, gender, hobbies, state, address } = req.body;
-
-    // Assuming you are using a file input field named 'file' in your form
-    const file = req.file;
-
-    // Convert the date of birth to a JavaScript Date object
-    const dobDate = new Date(dob);
+    // const { originalname, mimetype, buffer } = req.file;
+    console.log(req.body);
+    console.log(req.file);
+    const file = req.file.path;
+    console.log(file);
 
     const user = new userData({
       name,
-      dob: dobDate,
+      dob,
       gender,
       hobbies,
       state,
+      file:file,
       address,
-      file: {
-        data: file.buffer,
-        contentType: file.mimetype,
-      },
     });
 
     const savedUser = await user.save();
