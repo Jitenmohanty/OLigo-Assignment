@@ -31,7 +31,8 @@ const User = new mongoose.Schema({
 
   },
   file:{
-    type:String
+    type:String,
+    required: true,
   } 
 }, { timestamps: true });
 

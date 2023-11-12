@@ -2,8 +2,6 @@ import userData from "../Model/User.js";
 import multer from "multer";
 
 // Multer setup
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
 
 const storage = multer.diskStorage({
   destination: "./uploads/",
@@ -16,8 +14,8 @@ const upload = multer({ storage: storage });
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const notes = await userData.find({ user: req.user.id });
-    res.json(notes);
+    const users = await userData.find();
+    res.json(users);
   } catch (error) {
     return res.json({
       msg: `Error on fetching notes: ${error.message}`,

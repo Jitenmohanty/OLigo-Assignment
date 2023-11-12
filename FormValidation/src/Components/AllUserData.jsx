@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import {Link} from 'react-router-dom'
+import axios from "axios";
 
 const AllUserData = () => {
+  const [formData, setFormData] = useState([]);
+
+  function formatDate(inputDate) {
+    const originalDate = new Date(inputDate);
+    const formattedDate = `${originalDate.getFullYear()}-${(originalDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${originalDate.getDate().toString().padStart(2, '0')}`;
+  
+    return formattedDate;
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get("/api/allUser");
+        setFormData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching form data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
   return (
     <div className="bg-white min-h-screen p-4">
       <h2 className="text-2xl font-bold mb-4 flex justify-center uppercase text-purple-500">
@@ -26,20 +52,27 @@ const AllUserData = () => {
             animate={{ x: 0 }}
             transition={{ duration: 0.9, ease: "easeInOut" }}
           >
-            <tr className="bg-slate-200 h-24 sm:text-lg text-md">
-              <td className="px-4 py-2 text-center">John Doe</td>
-              <td className="px-4 py-2 text-center">1990-01-01</td>
-              <td className="px-4 py-2 text-center">Male</td>
-              <td className="px-4 py-2 text-center">Reading, Coding</td>
-              <td className="px-4 py-2 text-center">California</td>
-              <td className="px-4 py-2 text-center">123 Main St</td>
-              <td className="px-4 py-2 text-center">
-                {/* Action buttons go here */}
-                <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                  Download
-                </button>
-              </td>
-            </tr>
+            {formData &&
+              formData.map((data) => (
+                <tr
+                  className="bg-slate-200 h-24 sm:text-lg text-md"
+                  key={data.createdAt}
+                >
+                  <td className="px-4 py-2 text-center">{data.name}</td>
+                  <td className="px-4 py-2 text-center">{formatDate(data.dob)}</td>
+                  <td className="px-4 py-2 text-center">{data.gender}</td>
+                  <td className="px-4 py-2 text-center">{data.hobbies}</td>
+                  <td className="px-4 py-2 text-center">{data.state}</td>
+                  <td className="px-4 py-2 text-center">{data.address}</td>
+                  <td className="px-4 py-2 text-center">
+                   <Link to={`/api/${data.file}`}>
+                   <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                     download resume
+                    </button>
+                   </Link>
+                  </td>
+                </tr>
+              ))}
           </motion.tbody>
         </table>
       </div>
