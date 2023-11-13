@@ -5,6 +5,8 @@ import axios from "axios";
 const AllUserData = () => {
   const [formData, setFormData] = useState([]);
 
+  const host = "https://userformvalidations.onrender.com/"
+
   function formatDate(inputDate) {
     const originalDate = new Date(inputDate);
     const formattedDate = `${originalDate.getFullYear()}-${(
@@ -18,7 +20,7 @@ const AllUserData = () => {
 
   const downloadFile = async (id) => {
     try {
-      const res = await axios.get(`/api/download/${id}`, {
+      const res = await axios.get(`${host}/api/download/${id}`, {
         responseType: "blob",
       });
       const blob = new Blob([res.data], { type: res.data.type });

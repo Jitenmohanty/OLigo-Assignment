@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Registration = () => {
+  const host = "https://userformvalidations.onrender.com/"
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [userData, setUserData] = useState({
     name: "",
@@ -122,12 +123,11 @@ const Registration = () => {
       // console.log(userData.file);
 
       axios
-        .post("/api/addUser", formData)
+        .post(`${host}/api/addUser`, formData)
         .then((res) => {
           console.log(res, "res");
           if (res.data.code == 200) {
             toast.success("Form submitted ")
-            // console.log(formData);
           }
         })
         .catch((err) => {
