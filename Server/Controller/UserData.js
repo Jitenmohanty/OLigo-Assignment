@@ -1,5 +1,10 @@
+import User from "../Model/User.js";
 import userData from "../Model/User.js";
 import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import fs from "fs";
 
 // Multer setup
 
@@ -39,7 +44,7 @@ export const addUsers = async (req, res, next) => {
       gender,
       hobbies,
       state,
-      file:file,
+      file: file,
       address,
     });
 
@@ -50,6 +55,39 @@ export const addUsers = async (req, res, next) => {
     res
       .status(500)
       .json({ status: false, error: "Error adding user to the database" });
+  }
+};
+
+// export const downloadFile = async (req, res) => {
+//   const { id } = req.params;
+//   const item = await userData.findById(id);
+//   if (!item) {
+//     return next(new Error("No item found"));
+//   }
+//   const file = item.file;
+//   const filePath = path.join(__dirname, `../${file}`);
+//   res.download(filePath);
+// };
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const downloadFile = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const item = await userData.findById(id);
+
+    if (!item) {
+      return next(new Error("No item found"));
+    }
+    console.log(item)
+    const file = item.file;
+    const filePath = path.join(__dirname, `../${file}`);
+    res.download(filePath);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 

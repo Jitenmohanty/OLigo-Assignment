@@ -15,6 +15,25 @@ const AllUserData = () => {
     return formattedDate;
   }
 
+
+  const downloadFile = async (id) => {
+    try {
+      const res = await axios.get(
+        `/api/download/${id}`,
+        { responseType: "blob" }
+      );
+      const blob = new Blob([res.data], { type: res.data.type });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "file.pdf";
+      // link.download = res.headers["content-disposition"].split("filename=")[1];
+      link.click();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -65,11 +84,9 @@ const AllUserData = () => {
                   <td className="px-4 py-2 text-center">{data.state}</td>
                   <td className="px-4 py-2 text-center">{data.address}</td>
                   <td className="px-4 py-2 text-center">
-                   <Link to={`/api/${data.file}`}>
-                   <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                     download resume
+                   <button onClick={()=>downloadFile(data._id)} className="bg-blue-500 text-white px-2 py-1 rounded">
+                    Download Resume
                     </button>
-                   </Link>
                   </td>
                 </tr>
               ))}
