@@ -9,7 +9,7 @@ const Registration = () => {
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [userData, setUserData] = useState({
     name: "",
-    dob:new Date,
+    dob: new Date(),
     gender: "",
     hobbies: [],
     state: "",
@@ -62,53 +62,52 @@ const Registration = () => {
         // Optionally, you can display a message or perform an action here
         console.log("Select at least two hobbies");
       }
-      setSelectedHobbies(updatedHobbies)
+      setSelectedHobbies(updatedHobbies);
       return {
         ...prevUserData,
         hobbies: updatedHobbies,
-       
       };
     });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'dob') {
+    if (name === "dob") {
       const dateValue = new Date(value);
-      const formattedDate = dateValue.toISOString().split('T')[0]; // Format to "yyyy-MM-dd"
+      const formattedDate = dateValue.toISOString().split("T")[0]; // Format to "yyyy-MM-dd"
       setUserData((prevUserData) => ({
         ...prevUserData,
         [name]: formattedDate,
       }));
-  } else {
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [name]: value,
-    }));
-  }
+    } else {
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Custom validation: At least two hobbies must be selected
     if (selectedHobbies.length < 2) {
       toast.error("Please select at least two hobbies!");
       return;
     } else {
       const formData = new FormData();
-  
+
       // Append user data to FormData
       formData.append("name", userData.name);
       formData.append("dob", userData.dob);
       formData.append("gender", userData.gender);
-      formData.append("hobbies",userData.hobbies);
+      formData.append("hobbies", userData.hobbies);
       formData.append("state", userData.state);
       formData.append("address", userData.address);
-  
+
       // Append the file to FormData
       formData.append("file", userData.file);
-      console.log(userData.file)
+      console.log(userData.file);
       // try {
       //   const response = await fetch("/api/addUser", {
       //     method: "POST",
@@ -125,10 +124,10 @@ const Registration = () => {
       //       address:userData.address
       //     }),
       //   });
-  
+
       //   const json = await response.json();
       //   console.log(json);
-  
+
       //   if (json.status === true) {
       //     // Save the auth token and redirect
       //     toast.success("Account created successfully");
@@ -140,22 +139,21 @@ const Registration = () => {
       //   toast.error("Error submitting the form.");
       // }
 
-      axios.post('/api/addUser', formData)
-      .then((res) => {
-          console.log(res, "res")
+      axios
+        .post("/api/addUser", formData)
+        .then((res) => {
+          console.log(res, "res");
           if (res.data.code == 200) {
-           console.log(formData)
+            console.log(formData);
           }
-      })
-      .catch((err) => {
-          console.log(err, "err")
-      })
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
       console.log(formData);
-      console.log(userData)
+      console.log(userData);
     }
   };
-  
-  
 
   return (
     <div className="flex flex-col md:flex-row m-4 border rounded-lg bg-white">

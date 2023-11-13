@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {Link} from 'react-router-dom'
 import axios from "axios";
 
 const AllUserData = () => {
@@ -8,31 +7,29 @@ const AllUserData = () => {
 
   function formatDate(inputDate) {
     const originalDate = new Date(inputDate);
-    const formattedDate = `${originalDate.getFullYear()}-${(originalDate.getMonth() + 1)
+    const formattedDate = `${originalDate.getFullYear()}-${(
+      originalDate.getMonth() + 1
+    )
       .toString()
-      .padStart(2, '0')}-${originalDate.getDate().toString().padStart(2, '0')}`;
-  
+      .padStart(2, "0")}-${originalDate.getDate().toString().padStart(2, "0")}`;
+
     return formattedDate;
   }
 
-
   const downloadFile = async (id) => {
     try {
-      const res = await axios.get(
-        `/api/download/${id}`,
-        { responseType: "blob" }
-      );
+      const res = await axios.get(`/api/download/${id}`, {
+        responseType: "blob",
+      });
       const blob = new Blob([res.data], { type: res.data.type });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = "file.pdf";
-      // link.download = res.headers["content-disposition"].split("filename=")[1];
+      link.download = "file.docx";
       link.click();
     } catch (error) {
       console.log(error);
     }
   };
-
 
   useEffect(() => {
     async function fetchData() {
@@ -78,14 +75,19 @@ const AllUserData = () => {
                   key={data.createdAt}
                 >
                   <td className="px-4 py-2 text-center">{data.name}</td>
-                  <td className="px-4 py-2 text-center">{formatDate(data.dob)}</td>
+                  <td className="px-4 py-2 text-center">
+                    {formatDate(data.dob)}
+                  </td>
                   <td className="px-4 py-2 text-center">{data.gender}</td>
                   <td className="px-4 py-2 text-center">{data.hobbies}</td>
                   <td className="px-4 py-2 text-center">{data.state}</td>
                   <td className="px-4 py-2 text-center">{data.address}</td>
                   <td className="px-4 py-2 text-center">
-                   <button onClick={()=>downloadFile(data._id)} className="bg-blue-500 text-white px-2 py-1 rounded">
-                    Download Resume
+                    <button
+                      onClick={() => downloadFile(data._id)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded"
+                    >
+                      Download Resume
                     </button>
                   </td>
                 </tr>
