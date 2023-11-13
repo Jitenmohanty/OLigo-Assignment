@@ -122,7 +122,7 @@ const Registration = () => {
       // console.log(userData.file);
 
       axios
-        .post("/api/addUser", formData)
+        .post("https://userformvalidations.onrender.com/api/addUser", formData)
         .then((res) => {
           console.log(res, "res");
           if (res.data.code == 200) {

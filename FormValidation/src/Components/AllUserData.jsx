@@ -18,7 +18,7 @@ const AllUserData = () => {
 
   const downloadFile = async (id) => {
     try {
-      const res = await axios.get(`/api/download/${id}`, {
+      const res = await axios.get(`https://userformvalidations.onrender.com/api/download/${id}`, {
         responseType: "blob",
       });
       const blob = new Blob([res.data], { type: res.data.type });
@@ -34,7 +34,7 @@ const AllUserData = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get("/api/allUser");
+        const response = await axios.get("https://userformvalidations.onrender.com/api/allUser");
         setFormData(response.data);
         console.log(response.data);
       } catch (error) {
