@@ -12,7 +12,7 @@ const Registration = () => {
     dob: new Date(),
     gender: "",
     hobbies: [],
-    state: "",
+    state: "state",
     file: null,
     address: "",
   });
@@ -87,6 +87,18 @@ const Registration = () => {
     }
   };
 
+  const handleReset = ()=>{
+    setUserData({
+      name: "",
+    dob: new Date(),
+    gender: "",
+    hobbies: [],
+    state: "state",
+    file: null,
+    address: "",
+    })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -107,51 +119,21 @@ const Registration = () => {
 
       // Append the file to FormData
       formData.append("file", userData.file);
-      console.log(userData.file);
-      // try {
-      //   const response = await fetch("/api/addUser", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       name: userData.name,
-      //       dob:userData.dob,
-      //       gender:userData.gender,
-      //       hobbies:userData.hobbies,
-      //       state:userData.state,
-      //       file:userData.file,
-      //       address:userData.address
-      //     }),
-      //   });
-
-      //   const json = await response.json();
-      //   console.log(json);
-
-      //   if (json.status === true) {
-      //     // Save the auth token and redirect
-      //     toast.success("Account created successfully");
-      //   } else {
-      //     toast.error("User already exists.");
-      //   }
-      // } catch (error) {
-      //   console.error(error);
-      //   toast.error("Error submitting the form.");
-      // }
+      // console.log(userData.file);
 
       axios
         .post("/api/addUser", formData)
         .then((res) => {
           console.log(res, "res");
           if (res.data.code == 200) {
-            console.log(formData);
+            toast.success("Form submitted ")
+            // console.log(formData);
           }
         })
         .catch((err) => {
           console.log(err, "err");
+          toast.error("Something went wrong!..")
         });
-      console.log(formData);
-      console.log(userData);
     }
   };
 
@@ -333,11 +315,11 @@ const Registration = () => {
               className="mt-1 p-2 border rounded-md w-full"
               onChange={handleChange}
             >
+              <option hidden  >States</option>
               <option value="Odisha">Odisha</option>
               <option value="Panjab">Panjab</option>
               <option value="Hariyana">Hariyana</option>
               <option value="Moharastra">Moharastra</option>
-              {/* Add more options as needed */}
             </select>
           </div>
 
@@ -380,7 +362,7 @@ const Registration = () => {
           </div>
 
           <div className="flex justify-end">
-            <button type="reset" className="bg-white text-black p-2 rounded-md">
+            <button onClick={handleReset} type="reset" className="bg-white text-black p-2 rounded-md">
               Reset All
             </button>
             <button
